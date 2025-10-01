@@ -30,7 +30,6 @@ def run_query(pv, itemCode):
     else:
         filtro_item = ""
 
-    
     query = query_template.format(pv=pv, filtro_item=filtro_item)
 
     with _getConnection() as conn:

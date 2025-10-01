@@ -4,7 +4,7 @@ def render_label(df, path):
     row = df.iloc[0]
 
     for i in df.columns:
-        placeholder = "{{"+i+"}}" # criar a string q vai representar o nome do placeholder
+        placeholder = "{{"+i+"}}" # criar a string q vai representar o nome do placeholder/coluna
         if row[i] != None:
             valor = str(row[i])
         else:
