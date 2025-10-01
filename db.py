@@ -23,7 +23,6 @@ def run_query(pv, itemCode):
     with open("queries/label.sql", "r") as f:
         query_template = f.read()
 
-    # monta o filtro dinamicamente (igual VBA)
     if itemCode and len(str(itemCode)) >= 15:
         filtro_item = f"AND T1.ItemCode = '{itemCode}'"
     elif itemCode:
@@ -31,7 +30,7 @@ def run_query(pv, itemCode):
     else:
         filtro_item = ""
 
-    # substitui os placeholders no SQL
+    
     query = query_template.format(pv=pv, filtro_item=filtro_item)
 
     with _getConnection() as conn:
