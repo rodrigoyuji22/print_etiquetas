@@ -20,7 +20,7 @@ def _getConnection() -> pyodbc.Connection:
 
 
 def run_query(pv, itemCode):
-    with open("queries/label.sql", "r") as f:
+    with open("queries/expedicao.sql", "r") as f:
         query_template = f.read()
 
     if itemCode and len(str(itemCode)) >= 15:
@@ -30,7 +30,7 @@ def run_query(pv, itemCode):
     else:
         filtro_item = ""
 
-    query = query_template.format(pv=pv, filtro_item=filtro_item)
+    query = query_template.format(pv_=pv, filtro_item_=filtro_item)
 
     with _getConnection() as conn:
         return pd.read_sql(query, conn)

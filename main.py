@@ -5,7 +5,7 @@ from pathlib import Path
 query_path = Path("queries/label.sql")
 zpl_path = Path("templates/label.zpl")
 def main():
-    df = run_query(63169, "79813513PA200000")
+    df = run_query(63311, "7")
     z = render_label(df, zpl_path)
     print(z)
 

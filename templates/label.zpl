@@ -1,5 +1,3 @@
-
-
 ^XA
 ^PW839
 ^LL320
@@ -14,7 +12,7 @@
 ^FO35,120^A0N,18,18^FDPC: {{pc}}^FS;
 
 ^FO600,85^A0N,18,18^FDPV: {{pv}}^FS;
-^FO600,105^A0N,18,18^FDQtd: pc^FS;
+^FO600,105^A0N,18,18^FDQtd: {{qtd}} ctos^FS;
 
 ^FO35,150^BCN,60,Y,N,N^FD{{item_code}}^FS;
 
@@ -25,6 +23,3 @@
 ^FO530,205^A0N,18,18^FDsac@boltinox.com.br^FS;
 
 ^XZ
-
-
-
