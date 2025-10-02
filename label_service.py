@@ -1,4 +1,4 @@
-def render_label(df, path):
+def render_label(df, path, qtd = 0, peso = 0):
     with open(path, "r", encoding="utf-8") as f:
         zpl = f.read()
     row = df.iloc[0]
@@ -10,5 +10,10 @@ def render_label(df, path):
         else:
             valor = ""
         zpl = zpl.replace(placeholder, valor)
+
+        if qtd != 0:
+            zpl = zpl.replace("{{qtd}}", qtd)
+        if peso != 0:
+            zpl = zpl.replace("{{peso}}", peso)
     return zpl
 
