@@ -54,9 +54,10 @@ def run_query_est(itemCode, lote):
     with _getConnection() as conn:
         return pd.read_sql(query, conn)
 
-def run_query_tra(nf, vol):
+def run_query_tra(nf):
     with open("queries/transito.sql", "r") as f:
-        query = f.read()
-    
+        template_transport = f.read()
+    nf_s = f"'{nf}'"
+    query = template_transport.format(nf_ = nf_s)
     with _getConnection() as conn:
         return pd.read_sql(query, conn)
