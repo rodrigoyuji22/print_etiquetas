@@ -1,10 +1,13 @@
-from db import run_query_est, run_query_exp, run_query_tra
-from label_service import render_labels, render_transport_label
+from db import *
+from label_service import *
 from pathlib import Path
 from print_service import print_tra
 
 zpl_path1 = Path("templates/expedicao.zpl")
 zpl_path2 = Path("templates/estoque.zpl")
+load_dotenv()
+printerTransporte = os.getenv("PRINTER_TRA")
+
 
 def main():
     # df = run_query_exp("63169", "7")
@@ -13,8 +16,7 @@ def main():
     df = run_query_tra("NF 73187")
     print(df)
     zpl = render_transport_label(df)
-    print_tra(zpl)
+    print_tra(zpl, printerTransporte)
     
     
-
 main()
