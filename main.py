@@ -5,8 +5,9 @@ from print_service import print_tra
 
 zpl_path1 = Path("templates/expedicao.zpl")
 zpl_path2 = Path("templates/estoque.zpl")
+
 load_dotenv()
-printerTransporte = os.getenv("PRINTER_TRA")
+printerTransporte, printerExpedicao, printerGalpao2 = os.getenv("PRINTER_TRA"), os.getenv("PRINTER_EXPEDICAO"), os.getenv("PRINTER_GALPAO2")
 
 
 def main():
