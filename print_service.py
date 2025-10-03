@@ -1,7 +1,12 @@
 import win32print 
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+printerTransporte = os.getenv("PRINTER_TRA")
 
 def print_tra(zpl):
-    hPrinter = win32print.OpenPrinter("ZDesigner ZD230-203dpi ZPL Hugo")
+    hPrinter = win32print.OpenPrinter(f"{printerTransporte}")
     try:
         jobId = win32print.StartDocPrinter(hPrinter, 1,("Transporte", "", "RAW"))
         win32print.StartPagePrinter(hPrinter)
