@@ -8,13 +8,13 @@
 
 ~SD25
 
-^FO40,250^A0N,35,35^FD{{NomeCliente}}^FS;
+^FO40,250^A0N,45,45^FD{{NomeCliente}}^FS;
 
-^FO40,380^A0N,30,30^FDMunicipio: {{MunicipioEntrega}}^FS;
-^FO70,430^A0N,30,30^FDVol.: {{vol}}^FS;
+^FO30,380^A0N,35,35^FDMunicipio: {{MunicipioEntrega}}^FS;
+^FO70,480^A0N,45,45^FDVol.: {{vol}}^FS;
 
-^FO490,380^A0N,30,30^FDUF: {{EstadoEntrega}}^FS;
-^FO490,430^A0N,30,30^FDNF: {{NumeroNF}}^FS;
+^FO498,380^A0N,50,50^FDUF: {{EstadoEntrega}}^FS;
+^FO450,480^A0N,55,55^FD {{NumeroNF}}^FS;
 
 ^BY1,2,50
 
