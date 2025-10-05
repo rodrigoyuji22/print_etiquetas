@@ -13,6 +13,3 @@ def print_tra(zpl, printer):
         win32print.EndPagePrinter(hPrinter)
         win32print.EndDocPrinter(hPrinter)
         win32print.ClosePrinter(hPrinter)
-
-
-    

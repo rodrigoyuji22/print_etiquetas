@@ -1,19 +1,19 @@
-def render_labels(df, path, qtd = "0", peso = "0"):
+def render_labels(df, path, qtd = "", peso = ""):
     with open(path, "r", encoding="utf-8") as f:
         zpl = f.read()
     row = df.iloc[0]
 
-    for i in df.columns: # for in in df.columns itera o nome das columns
-        placeholder = "{{"+i+"}}" # criar a string q vai representar o nome do placeholder/coluna
+    for i in df.columns:  # for in in df.columns itera o nome das columns
+        placeholder = "{{"+i+"}}"  # criar a string q vai representar o nome do placeholder/coluna
         if row[i] != None:
             valor = str(row[i])
         else:
             valor = ""
         zpl = zpl.replace(placeholder, valor)
 
-        if qtd != "0":
+        if qtd:
             zpl = zpl.replace("{{qtd}}", qtd)
-        if peso != "0":
+        if peso:
             zpl = zpl.replace("{{peso}}", peso)
     return zpl
 

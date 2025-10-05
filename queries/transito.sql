@@ -7,4 +7,4 @@ FROM OINV
 INNER JOIN INV1 ON OINV.DocEntry = INV1.DocEntry
 INNER JOIN ODLN ON INV1.BaseEntry = ODLN.DocEntry AND INV1.BaseType = 15 --entrega
 LEFT JOIN DLN12 ON ODLN.DocEntry = DLN12.DocEntry
-WHERE OINV.NumAtCard = {nf_};
+WHERE OINV.NumAtCard = ?;

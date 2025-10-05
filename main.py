@@ -1,7 +1,7 @@
 from db import *
-from label_service import *
+from services.label_service import *
 from pathlib import Path
-from print_service import print_tra
+from services.print_service import print_tra
 
 zpl_path1 = Path("templates/expedicao.zpl")
 zpl_path2 = Path("templates/estoque.zpl")
