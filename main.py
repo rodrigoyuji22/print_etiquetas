@@ -1,7 +1,10 @@
-from db import *
 from services.label_service import *
-from pathlib import Path
 from services.print_service import print_tra
+from services.query_service import *
+import os
+from dotenv import load_dotenv
+from pathlib import Path
+
 
 zpl_path1 = Path("templates/expedicao.zpl")
 zpl_path2 = Path("templates/estoque.zpl")

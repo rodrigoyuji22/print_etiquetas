@@ -6,7 +6,7 @@ SELECT DISTINCT
 FROM OITM T0
 INNER JOIN OIBT T1 ON T1.ItemCode = T0.ItemCode
 WHERE T1.Quantity > 0
-    {filtro_item_}
+    AND T0.ItemCode = ?
 ORDER BY 
     T0.ItemCode,
     T1.BatchNum;

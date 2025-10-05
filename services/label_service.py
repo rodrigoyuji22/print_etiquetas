@@ -11,10 +11,10 @@ def render_labels(df, path, qtd = "", peso = ""):
             valor = ""
         zpl = zpl.replace(placeholder, valor)
 
-        if qtd:
-            zpl = zpl.replace("{{qtd}}", qtd)
-        if peso:
-            zpl = zpl.replace("{{peso}}", peso)
+    if qtd:
+        zpl = zpl.replace("{{qtd}}", qtd)
+    if peso:
+        zpl = zpl.replace("{{peso}}", peso)
     return zpl
 
 def render_transport_label(df, vol = 0):

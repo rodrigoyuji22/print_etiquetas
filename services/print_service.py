@@ -1,7 +1,4 @@
 import win32print 
-from dotenv import load_dotenv
-import os
-
 
 def print_tra(zpl, printer):
     hPrinter = win32print.OpenPrinter(printer)
