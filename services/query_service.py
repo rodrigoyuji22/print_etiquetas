@@ -3,7 +3,7 @@ import pandas as pd
 
 def run_query_tra(nf):
     try:
-        with open("../queries/transito.sql", "r", encoding="utf-8") as f:
+        with open("queries/transito.sql", "r", encoding="utf-8") as f:
             query = f.read()
         if nf:
             with _getConnection() as conn:
@@ -15,7 +15,7 @@ def run_query_tra(nf):
 
 def run_query_est(itemCode):
     try:
-        with open("../queries/estoque.sql", "r", encoding="utf-8") as f:
+        with open("queries/estoque.sql", "r", encoding="utf-8") as f:
             query= f.read()
         if itemCode:
             with _getConnection() as conn:
@@ -27,7 +27,7 @@ def run_query_est(itemCode):
 
 def run_query_exp(pv, itemCode):
     try:
-        with open("../queries/expedicao.sql") as f:
+        with open("queries/expedicao.sql") as f:
             query = f.read()
         if itemCode and pv:
             with _getConnection() as conn:

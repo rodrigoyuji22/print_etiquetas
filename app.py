@@ -36,7 +36,7 @@ def print_transporte():
             return jsonify({'error': 'NF não encontrada'}), 404
     
         for i in range(1, vol+1):
-            vol_str = f"{i:02d}/{vol}"
+            vol_str = f"{i:02d}/{vol:02d}"
             zpl = render_transport_label(df, vol=vol_str)
             print_(zpl, printerTransporte)
         
@@ -75,7 +75,7 @@ def print_estoque():
             'message': str(e)
         }), 500
     
-@app.route('/print/expedicao', methods=('POST')) # type: ignore
+@app.route('/print/expedicao', methods=['POST']) # type: ignore
 def print_expedicao():
     try:
         data = request.get_json()
