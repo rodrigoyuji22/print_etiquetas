@@ -34,7 +34,4 @@ def run_query_exp(pv, itemCode):
                 return pd.read_sql(query, conn, params=[pv, itemCode])
     except Exception as e:
         print("Erro na consulta")
-        raise e
-        
-
-                 
+        raise e    

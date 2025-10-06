@@ -1,6 +1,6 @@
 import win32print 
 
-def print_tra(zpl, printer):
+def print_(zpl, printer):
     hPrinter = win32print.OpenPrinter(printer)
     try:
         jobId = win32print.StartDocPrinter(hPrinter, 1,("etiqueta", "", "RAW"))

@@ -17,7 +17,7 @@ def render_labels(df, path, qtd = "", peso = ""):
         zpl = zpl.replace("{{peso}}", peso)
     return zpl
 
-def render_transport_label(df, vol = 0):
+def render_transport_label(df, vol = "1"):
     with open("templates/transito.zpl") as f:
         zpl = f.read()
     row = df.iloc[0]
@@ -25,9 +25,5 @@ def render_transport_label(df, vol = 0):
         placeholder = "{{" + i + "}}"
         if row[i] != None:
             zpl = zpl.replace(placeholder, str(row[i]))
+    zpl = zpl.replace("{{vol}}", str(vol))
     return zpl
-
-
-
-
-
