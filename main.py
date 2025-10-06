@@ -1,5 +1,5 @@
 from services.label_service import *
-from services.print_service import print
+from services.print_service import print_
 from services.query_service import *
 import os
 from dotenv import load_dotenv
