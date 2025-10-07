@@ -9,7 +9,7 @@
 ^FO0,80^GB900,1,1^FS
 ^FO28,100^A0N,32,32^FD{{descricao}}^FS;
 ^FO500,170^A0N,32,32^FDPeso: {{peso}} kg^FS;
-^FO28,170^A0N,33,Y,N,N^FD {{itemCode}}^FS;
+^FO28,170^A0N,33,Y,N,N^FD {{item_code}}^FS;
 ^FO40,215^A0N,32,32^FDQtd: {{qtd}} pcs^FS;
 
 ^FO500,230^A0N,16,16^FDPRODUZIDO POR TERCEIRO^FS;

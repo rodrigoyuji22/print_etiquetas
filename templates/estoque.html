@@ -227,7 +227,16 @@
           tr.addEventListener("click", () => {
             [...tbody.querySelectorAll("tr")].forEach(l => l.classList.remove("selected"));
             tr.classList.add("selected");
-            linhaSelecionada = { ...row, lote: select.value };
+
+            // Captura segura do item_code (independente do casing)
+            const codigo = row.item_code || row.ItemCode || row.ITEMCODE || "";
+
+            linhaSelecionada = { 
+              ...row, 
+              itemCode: row.item_code,  // cria o campo no formato esperado pelo backend
+              lote: select.value 
+            };
+
             btnImprimir.disabled = false;
           });
 
