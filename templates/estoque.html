@@ -95,7 +95,7 @@
 
     .row {
       display: flex;
-      gap: 10px;
+      gap: 30px;
       align-items: flex-end;
       margin-bottom: 15px;
     }
@@ -123,7 +123,7 @@
   <div class="container">
     <h2>Consulta e Impressão de Estoque</h2>
 
-    <!-- Campos de quantidade e peso -->
+    <!-- Campos de quantidade, peso e número de etiquetas -->
     <div class="row">
       <div style="flex:1">
         <label for="qtd">Quantidade:</label>
@@ -132,6 +132,11 @@
       <div style="flex:1">
         <label for="peso">Peso (opcional):</label>
         <input type="text" id="peso" placeholder="exemplo: 12,5">
+      </div>
+      <!-- NOVO -->
+      <div style="flex:1">
+        <label for="n">№ Etiquetas:</label>
+        <input type="number" id="n" min="1" value="1" placeholder="">
       </div>
     </div>
 
@@ -261,15 +266,18 @@
       if (!linhaSelecionada) return alert("Selecione um item primeiro.");
       const qtd = document.getElementById('qtd').value.trim();
       const peso = document.getElementById('peso').value.trim();
+      const n = document.getElementById('n').value.trim();        /* NOVO */
       const printer = document.getElementById('printer').value;
 
       if (!qtd) return alert("Informe a quantidade.");
+      if (!n || Number(n) < 1) return alert("Informe o número de etiquetas (n) ≥ 1."); /* NOVO */
 
       const payload = {
         itemCode: linhaSelecionada.item_code,
         lote: linhaSelecionada.lote,
         qtd,
         peso,
+        n: Number(n),            /* NOVO */
         printer
       };
 
@@ -284,7 +292,7 @@
         });
 
         const out = await resp.json();
-        if (resp.ok) showMessage("Etiqueta inserida na fila de impressão ✅");
+        if (resp.ok) showMessage(`Etiqueta inserida na fila de impressão ✅ (${n}x)`);
         else showMessage(out.error || "Erro ao imprimir etiqueta.", "error");
       } catch (err) {
         showMessage("Erro: " + err.message, "error");

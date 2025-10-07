@@ -134,7 +134,7 @@
 
     .input-group {
       display: flex;
-      gap: 10px;
+      gap: 30px; /* Espaço entre os inputs */
       align-items: flex-end;
     }
 
@@ -161,9 +161,15 @@
     <div class="input-group">
       <button id="btnBuscar">Buscar Itens</button>
       <button id="btnImprimir" disabled>Imprimir Selecionado</button>
+
       <div class="input-small">
-        <label for="qtd">Qtd:</label>
+        <label for="qtd">Quantidade:</label>
         <input type="number" id="qtd" min="1" placeholder="">
+      </div>
+
+      <div class="input-small">
+        <label for="n">№ Etiquetas:</label>
+        <input type="number" id="n" min="1" value="1" placeholder="">
       </div>
     </div>
 
@@ -172,7 +178,7 @@
         <tr>
           <th>ItemCode</th>
           <th>Descrição</th>
-          <th>Quantidade Total Em ctos</th>
+          <th>Quantidade Total em Ctos</th>
           <th>Lote</th>
         </tr>
       </thead>
@@ -277,14 +283,17 @@
       if (!linhaSelecionada) return alert("Selecione um item primeiro.");
       const printer = document.getElementById('printer').value;
       const qtd = document.getElementById('qtd').value.trim();
+      const n = document.getElementById('n').value.trim();
 
-      if (!qtd) return alert("Informe a quantidade a imprimir.");
+      if (!qtd) return alert("Informe a quantidade por etiqueta.");
+      if (!n || Number(n) < 1) return alert("Informe o número de etiquetas (n) ≥ 1.");
 
       const payload = {
         pv: linhaSelecionada.pv,
         itemCode: linhaSelecionada.item_code,
         lote: linhaSelecionada.lote,
         qtd,
+        n: Number(n),
         printer
       };
 
@@ -300,7 +309,7 @@
 
         const out = await resp.json();
         if (resp.ok) {
-          showMessage("Etiqueta inserida na fila de impressão ✅");
+          showMessage(`Etiqueta inserida na fila de impressão ✅ (${n}x)`);
         } else {
           showMessage(out.error || "Erro ao imprimir etiqueta.", "error");
         }

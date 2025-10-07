@@ -76,6 +76,7 @@ def print_estoque():
         qtd = data.get('qtd')
         peso = data.get('peso')
         printer_choice = data.get('printer')
+        n = data.get('n', 1)
 
         if not itemCode:
             return jsonify({'error': 'Campo Código do item obrigatório'}), 400
@@ -84,7 +85,8 @@ def print_estoque():
         printer = printerGalpao if printer_choice == 'galpao' else printerExpedicao
         df = run_query_est(itemCode)
         zpl = render_labels(df, template_estoque, qtd=qtd, peso=peso, lote=lote)
-        print_(zpl, printer)
+        for i in range(0, n):
+            print_(zpl, printer)
         return jsonify({
             'status': 'success', 
             'message': 'Etiqueta inserida na fila de impressao'
@@ -106,13 +108,15 @@ def print_expedicao():
         peso = data.get('peso')
         lote = data.get('lote')
         printer_choice = data.get('printer')
+        n = data.get('n')
 
         df = run_query_exp(pv)
         if df.empty: # pyright: ignore[reportOptionalMemberAccess]
             return jsonify({'error': 'insira um pv valido'}), 404
         printer = printerGalpao if printer_choice == 'galpao' else printerExpedicao
         zpl = render_labels(df, template_expedicao, qtd=qtd, peso=peso, lote=lote)
-        print_(zpl, printer)
+        for i in range(0, n):
+            print_(zpl, printer)
         return jsonify({
             'status': 'success',
             'message': 'Etiqueta enviada para impressão com sucesso!'
