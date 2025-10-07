@@ -3,17 +3,107 @@
 <head>
   <meta charset="UTF-8" />
   <title>Menu • Etiquetas</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    :root {
+      --bg-primary: #1e1f22;
+      --bg-secondary: #2b2d30;
+      --bg-hover: #3a3d41;
+      --accent: #4c8bf5;
+      --text-primary: #e0e0e0;
+      --text-secondary: #b0b0b0;
+      --border: #3a3a3a;
+      --radius: 12px;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+    }
+
+    .container {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px 60px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+      text-align: center;
+      width: 400px;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: var(--text-secondary);
+      margin-bottom: 30px;
+      font-size: 0.95rem;
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .btn {
+      display: block;
+      text-decoration: none;
+      background-color: var(--bg-hover);
+      color: var(--text-primary);
+      padding: 12px 0;
+      border-radius: var(--radius);
+      font-size: 1rem;
+      letter-spacing: 0.3px;
+      font-weight: 500;
+      text-align: center;
+      border: 1px solid var(--border);
+      transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn:hover {
+      background-color: var(--accent);
+      color: #fff;
+      transform: scale(1.03);
+      box-shadow: 0 0 12px rgba(76, 139, 245, 0.4);
+    }
+
+    footer {
+      margin-top: 30px;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
-    <h1>Imprimir de Etiquetas</h1>
-    <p>Escolha o tipo de etiqueta:</p>
+    <h1>Impressão de Etiquetas</h1>
+    <p>Escolha o tipo de etiqueta que deseja imprimir:</p>
     <nav class="menu">
-      <a class="btn" href="/transporte">Transporte</a>
-      <a class="btn" href="/expedicao">Expedição</a>
-      <a class="btn" href="/estoque">Estoque</a>
+      <a class="btn" href="/transporte">🚚 Transporte</a>
+      <a class="btn" href="/expedicao">📦 Expedição</a>
+      <a class="btn" href="/estoque">🏭 Estoque</a>
     </nav>
+    <footer>
+      <p>Versão de testes ainda</p>
+    </footer>
   </div>
 </body>
 </html>

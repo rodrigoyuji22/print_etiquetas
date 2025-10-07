@@ -10,7 +10,7 @@ from services.label_service import *
 load_dotenv()
 app = Flask(__name__)
 
-printerTransporte, printerExpedicao, printerEstoque = os.getenv("PRINTER_TRA"), os.getenv("PRINTER_EXPEDICAO"), os.getenv("PRINTER_GALPAO2")
+printerTransporte, printerExpedicao, printerGalpao = os.getenv("PRINTER_TRA"), os.getenv("PRINTER_EXPEDICAO"), os.getenv("PRINTER_GALPAO2")
 template_transporte, template_expedicao, template_estoque = Path("templates/transito.zpl"), Path("templates/expedicao.zpl"), Path("templates/estoque.zpl")
 host, port = os.getenv("HOST_API"), int(os.getenv("PORT_API", 1234))
 
@@ -75,12 +75,14 @@ def print_estoque():
         lote = data.get('lote')
         qtd = data.get('qtd')
         peso = data.get('peso')
+        printer_choice = data.get('printer')
 
         if not itemCode:
             return jsonify({'error': 'Campo Código do item obrigatório'}), 400
+        printer = printerGalpao if printer_choice == 'galpao' else printerExpedicao
         df = run_query_est(itemCode)
         zpl = render_labels(df, template_estoque, qtd, peso)
-        print_(zpl, printerExpedicao)
+        print_(zpl, printer)
         return jsonify({
             'status': 'success', 
             'message': 'Etiqueta inserida na fila de impressao'
@@ -101,12 +103,14 @@ def print_expedicao():
         qtd = data.get('qtd')
         peso = data.get('peso')
         lote = data.get('lote')
+        printer_choice = data.get('printer')
 
         df = run_query_exp(pv, itemCode)
         if df.empty: # pyright: ignore[reportOptionalMemberAccess]
             return jsonify({'error': 'insira um pv valido'}), 404
+        printer = printerGalpao if printer_choice == 'galpao' else printerExpedicao
         zpl = render_labels(df, template_expedicao, qtd, peso)
-        print_(zpl, printerExpedicao)
+        print_(zpl, printer)
     except Exception as e:
         return jsonify({
             'status': 'error',

@@ -18,7 +18,7 @@ def render_labels(df, path, qtd = "", peso = ""):
     return zpl
 
 def render_transport_label(df, vol = "1"):
-    with open("templates/transito.zpl") as f:
+    with open("zpl/transito.zpl") as f:
         zpl = f.read()
     row = df.iloc[0]
     for i in df.columns:
