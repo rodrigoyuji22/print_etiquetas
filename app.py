@@ -162,4 +162,4 @@ def consulta_estoque():
 
         
 if __name__ == '__main__':
-    app.run(host=host, port=port, debug=True, threaded=True)
+    app.run(host=host, port=port, debug=False, threaded=True)
