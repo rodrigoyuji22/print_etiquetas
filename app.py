@@ -160,8 +160,6 @@ def consulta_estoque():
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
-
-
         
 if __name__ == '__main__':
     app.run(host=host, port=port, debug=True, threaded=True)
