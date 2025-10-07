@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Etiqueta de Estoque</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 400px; margin: 40px auto; }
+    label, input, select, button { display: block; margin-bottom: 12px; width: 100%; }
+    button { padding: 8px; cursor: pointer; }
+    .result { margin-top: 20px; padding: 10px; border-radius: 6px; background: #f4f4f4; display: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Etiqueta de Estoque</h2>
+
+    <form id="formEstoque">
+      <label for="itemCode">Código do Item:</label>
+      <input type="text" id="itemCode" name="itemCode" placeholder="Ex: ITM-001" required>
+
+      <label for="lote">Número do Lote:</label>
+      <input type="text" id="lote" name="lote" placeholder="Ex: L12345" required>
+
+      <label for="qtd">Quantidade:</label>
+      <input type="number" id="qtd" name="qtd" placeholder="Ex: 100" min="1" required>
+
+      <label for="peso">Peso (opcional):</label>
+      <input type="text" id="peso" name="peso" placeholder="Ex: 12.5 kg">
+
+      <label for="printer">Selecione a Impressora:</label>
+      <select id="printer" name="printer" required>
+        <option value="galpao">Impressora Galpão</option>
+        <option value="expedicao">Impressora Expedição</option>
+      </select>
+
+      <button type="submit">Imprimir Etiqueta</button>
+    </form>
+
+    <div class="result" id="resultBox"></div>
+    <a href="{{ url_for('home') }}" class="back">⬅ Voltar ao Menu</a>
+  </div>
+
+  <script>
+    const form = document.getElementById('formEstoque');
+    const resultBox = document.getElementById('resultBox');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const itemCode = document.getElementById('itemCode').value;
+      const lote = document.getElementById('lote').value;
+      const qtd = document.getElementById('qtd').value;
+      const peso = document.getElementById('peso').value;
+      const printer = document.getElementById('printer').value;
+
+      try {
+        const response = await fetch("{{ url_for('print_estoque') }}", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ itemCode, lote, qtd, peso, printer })
+        });
+
+        if (!response.ok) throw new Error("Erro ao enviar dados para o servidor.");
+
+        const data = await response.json();
+        resultBox.style.display = "block";
+        resultBox.style.background = "#f4f4f4";
+        resultBox.innerHTML = `
+          <strong>Resposta do servidor:</strong><br>
+          Item: ${data.itemCode}<br>
+          Lote: ${data.lote}<br>
+          Quantidade: ${data.qtd}<br>
+          Peso: ${data.peso || '(não informado)'}<br>
+          Impressora: ${data.printer}<br>
+          Status: ${data.status || 'Etiqueta enviada para impressão'}
+        `;
+      } catch (err) {
+        resultBox.style.display = "block";
+        resultBox.style.background = "#ffdddd";
+        resultBox.innerHTML = `<strong>Erro:</strong> ${err.message}`;
+      }
+    });
+  </script>
+</body>
+</html>
