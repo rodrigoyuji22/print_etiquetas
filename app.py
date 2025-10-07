@@ -11,7 +11,7 @@ load_dotenv()
 app = Flask(__name__)
 
 printerTransporte, printerExpedicao, printerGalpao = os.getenv("PRINTER_TRA"), os.getenv("PRINTER_EXPEDICAO"), os.getenv("PRINTER_GALPAO2")
-template_transporte, template_expedicao, template_estoque = Path("templates/transito.zpl"), Path("templates/expedicao.zpl"), Path("templates/estoque.zpl")
+template_transporte, template_expedicao, template_estoque = Path("zpl/transito.zpl"), Path("zpl/expedicao.zpl"), Path("zpl/estoque.zpl")
 host, port = os.getenv("HOST_API"), int(os.getenv("PORT_API", 1234))
 
 
@@ -79,9 +79,11 @@ def print_estoque():
 
         if not itemCode:
             return jsonify({'error': 'Campo Código do item obrigatório'}), 400
+        if not lote:
+            return jsonify({'erro no lote'})
         printer = printerGalpao if printer_choice == 'galpao' else printerExpedicao
         df = run_query_est(itemCode)
-        zpl = render_labels(df, template_estoque, qtd, peso)
+        zpl = render_labels(df, template_estoque, qtd=qtd, peso=peso, lote=lote)
         print_(zpl, printer)
         return jsonify({
             'status': 'success', 
@@ -105,19 +107,59 @@ def print_expedicao():
         lote = data.get('lote')
         printer_choice = data.get('printer')
 
-        df = run_query_exp(pv, itemCode)
+        df = run_query_exp(pv)
         if df.empty: # pyright: ignore[reportOptionalMemberAccess]
             return jsonify({'error': 'insira um pv valido'}), 404
         printer = printerGalpao if printer_choice == 'galpao' else printerExpedicao
-        zpl = render_labels(df, template_expedicao, qtd, peso)
+        zpl = render_labels(df, template_expedicao, qtd=qtd, peso=peso, lote=lote)
         print_(zpl, printer)
+        return jsonify({
+            'status': 'success',
+            'message': 'Etiqueta enviada para impressão com sucesso!'
+        }), 201
     except Exception as e:
         return jsonify({
             'status': 'error',
             'message': str(e)
         }), 500
     
+@app.route('/consulta/expedicao', methods=['POST'])
+def consulta_expedicao():
+    try:
+        data = request.get_json()
+        pv = data.get('pv')
+
+        if not pv:
+            return jsonify({'error': 'Pedido de venda invalido'})
+        df = run_query_exp(pv)
+        if df.empty: # type: ignore
+            return jsonify({'error': 'Pedido de venda vazio'})
+        return df.to_dict(orient = 'records') # type: ignore
         
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': str(e)
+        }), 500
+        
+@app.route('/consulta/estoque', methods=['POST'])
+def consulta_estoque():
+    try:
+        data = request.get_json()
+        itemCode = data.get('itemCode', '').strip()
+
+        if not itemCode:
+            return jsonify({'error': 'Digite parte do código ou nome do item'}), 400
+
+        df = run_query_est(itemCode)
+        if df.empty: # type: ignore
+            return jsonify({'error': 'Nenhum item encontrado'}), 404
+
+        return df.to_dict(orient='records') # type: ignore
+
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
 
 
         

@@ -19,19 +19,19 @@ def run_query_est(itemCode):
             query= f.read()
         if itemCode:
             with _getConnection() as conn:
-                return pd.read_sql(query, conn, params=[itemCode])
+                return pd.read_sql(query, conn, params=[f"%{itemCode}%"])
     except Exception as e:
         print("Erro na consulta")
         raise e
         
 
-def run_query_exp(pv, itemCode):
+def run_query_exp(pv):
     try:
         with open("queries/expedicao.sql") as f:
             query = f.read()
-        if itemCode and pv:
+        if pv:
             with _getConnection() as conn:
-                return pd.read_sql(query, conn, params=[pv, itemCode])
+                return pd.read_sql(query, conn, params=[pv])
     except Exception as e:
         print("Erro na consulta")
         raise e    

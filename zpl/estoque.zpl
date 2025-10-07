@@ -7,15 +7,15 @@
 ~SD25
 ^FO40,30^A0N,40,40^FDBOLT INOX^FS;
 ^FO0,80^GB900,1,1^FS
-^FO28,100^A0N,28,28^FD{{descricao}}^FS;
-^FO500,160^A0N,25,25^FDPeso: {{peso}} kg^FS;
-^FO40,160^A0N,25,25^FDQtd: {{qtd}} pcs^FS;
+^FO28,100^A0N,32,32^FD{{descricao}}^FS;
+^FO500,170^A0N,32,32^FDPeso: {{peso}} kg^FS;
+^FO28,170^A0N,33,Y,N,N^FD {{itemCode}}^FS;
+^FO40,215^A0N,32,32^FDQtd: {{qtd}} pcs^FS;
 
 ^FO500,230^A0N,16,16^FDPRODUZIDO POR TERCEIRO^FS;
 ^FO500,250^A0N,18,18^FDsac@boltinox.com.br^FS;
 
-^FO40,200^A0N,25,25^FDLote: {{lote}}^FS;
-^FO40,240^BCN,35,Y,N,N^FD{{lote}}^FS;
+^FO40,250^A0N,32,32^FDLote: {{lote}}^FS;
 
 
 ^XZ

@@ -1,4 +1,4 @@
-def render_labels(df, path, qtd = "", peso = ""):
+def render_labels(df, path, qtd = "", peso = "", lote =""):
     with open(path, "r", encoding="utf-8") as f:
         zpl = f.read()
     row = df.iloc[0]
@@ -12,9 +12,11 @@ def render_labels(df, path, qtd = "", peso = ""):
         zpl = zpl.replace(placeholder, valor)
 
     if qtd:
-        zpl = zpl.replace("{{qtd}}", qtd)
+        zpl = zpl.replace("{{qtd}}", str(qtd))
     if peso:
-        zpl = zpl.replace("{{peso}}", peso)
+        zpl = zpl.replace("{{peso}}", str(peso))
+    if lote:
+        zpl = zpl.replace("{{lote}}", str(lote))
     return zpl
 
 def render_transport_label(df, vol = "1"):

@@ -1,12 +1,14 @@
-SELECT DISTINCT 
-    T0.ItemCode as item_code,
-    T0.ItemName as descricao,
-    T1.BatchNum as lote,
-    T1.Quantity as qtd
-FROM OITM T0
-INNER JOIN OIBT T1 ON T1.ItemCode = T0.ItemCode
-WHERE T1.Quantity > 0
-    AND T0.ItemCode = ?
-ORDER BY 
+SELECT 
+    T0.ItemCode AS item_code,
+    T0.ItemName AS descricao,
+    STRING_AGG(T1.BatchNum, ',') AS lotes_disponiveis
+FROM OITM AS T0
+INNER JOIN OIBT AS T1 ON T1.ItemCode = T0.ItemCode
+WHERE 
+    T1.Quantity > 0
+    AND T0.ItemCode LIKE ?
+GROUP BY 
     T0.ItemCode,
-    T1.BatchNum;
+    T0.ItemName
+ORDER BY 
+    T0.ItemCode;
