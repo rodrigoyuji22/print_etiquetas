@@ -113,9 +113,20 @@ def print_expedicao():
         df = run_query_exp(pv)
         if df.empty: # pyright: ignore[reportOptionalMemberAccess]
             return jsonify({'error': 'insira um pv valido'}), 404
+
+        if not itemCode:
+            return jsonify({'error': 'Selecione um item para impressão'}), 400
+
+        normalized_item = str(itemCode).strip()
+        filtered_df = df[df["item_code"].astype(str).str.strip() == normalized_item]
+        if filtered_df.empty:
+            return jsonify({'error': 'Item selecionado não pertence ao PV informado'}), 404
+
+        selected_row = filtered_df.iloc[0]
         printer = printerGalpao if printer_choice == 'galpao' else printerExpedicao
-        zpl = render_labels(df, template_expedicao, qtd=qtd, peso=peso, lote=lote)
-        for i in range(0, n):
+        zpl = render_labels(selected_row, template_expedicao, qtd=qtd, peso=peso, lote=lote)
+        total_labels = int(n) if n else 1
+        for _ in range(total_labels):
             print_(zpl, printer)
         return jsonify({
             'status': 'success',
