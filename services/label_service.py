@@ -5,7 +5,6 @@ import pandas as pd
 
 
 def _normalize_row(data: Any) -> Mapping[str, Any]:
-    """Extrai um dicionário de valores a partir de diferentes formatos."""
     if isinstance(data, pd.DataFrame):
         if data.empty:
             raise ValueError("DataFrame vazio recebido para impressão")

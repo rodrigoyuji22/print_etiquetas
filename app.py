@@ -84,14 +84,18 @@ def print_estoque():
             return jsonify({'erro no lote'})
         printer = printerGalpao if printer_choice == 'galpao' else printerExpedicao
         df = run_query_est(itemCode)
-        zpl = render_labels(df, template_estoque, qtd=qtd, peso=peso, lote=lote)
-        for i in range(0, n):
+        normalized_item = str(itemCode).strip()
+        filtered_df = df[df["item_code"].astype(str).str.strip() == normalized_item] # type: ignore
+        selected_row = filtered_df.iloc[0]
+        printer = printerGalpao if printer_choice == 'galpao' else printerExpedicao
+        zpl = render_labels(selected_row, template_estoque, qtd=qtd, peso=peso, lote=lote)
+        total_labels = int(n) if n else 1
+        for _ in range(total_labels):
             print_(zpl, printer)
         return jsonify({
-            'status': 'success', 
-            'message': 'Etiqueta inserida na fila de impressao'
+            'status': 'success',
+            'message': 'Etiqueta enviada para impressão com sucesso!'
         }), 201
-
     except Exception as e:
         return jsonify({
             'status': 'error',
@@ -118,7 +122,7 @@ def print_expedicao():
             return jsonify({'error': 'Selecione um item para impressão'}), 400
 
         normalized_item = str(itemCode).strip()
-        filtered_df = df[df["item_code"].astype(str).str.strip() == normalized_item]
+        filtered_df = df[df["item_code"].astype(str).str.strip() == normalized_item] # type: ignore
         if filtered_df.empty:
             return jsonify({'error': 'Item selecionado não pertence ao PV informado'}), 404
 

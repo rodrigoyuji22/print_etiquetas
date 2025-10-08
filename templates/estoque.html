@@ -35,17 +35,9 @@
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
     }
 
-    h2 {
-      text-align: center;
-      color: #fff;
-      margin-bottom: 20px;
-    }
+    h2 { text-align: center; color: #fff; margin-bottom: 20px; }
 
-    label {
-      display: block;
-      color: var(--text-secondary);
-      margin-bottom: 6px;
-    }
+    label { display: block; color: var(--text-secondary); margin-bottom: 6px; }
 
     input, select {
       width: 100%;
@@ -67,35 +59,18 @@
       cursor: pointer;
       transition: background 0.2s, transform 0.15s;
     }
-
     button:hover { background: #5b96ff; transform: scale(1.03); }
     button:disabled { background: #3a3a3a; cursor: not-allowed; }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-
-    th, td {
-      border-bottom: 1px solid var(--border);
-      padding: 10px;
-      text-align: left;
-    }
-
-    th {
-      background: #252628;
-      color: #c9c9c9;
-      text-transform: uppercase;
-      font-size: 0.85rem;
-    }
-
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border-bottom: 1px solid var(--border); padding: 10px; text-align: left; }
+    th { background: #252628; color: #c9c9c9; text-transform: uppercase; font-size: 0.85rem; }
     tr:hover { background: var(--bg-hover); }
     tr.selected { background: #4c8bf5 !important; color: white; }
 
     .row {
       display: flex;
-      gap: 30px;
+      gap: 30px;           /* mesmo espaçamento do expedição */
       align-items: flex-end;
       margin-bottom: 15px;
     }
@@ -106,17 +81,12 @@
       padding: 10px;
       border-radius: 8px;
       display: none;
+      transition: opacity 0.5s ease;
     }
+    .result.success { background: #233026; border: 1px solid #3b543b; color: #b6f5b6; }
+    .result.error { background: #3b2626; border: 1px solid #653939; color: #ffbfbf; }
 
-    .result.success { color: #b6f5b6; }
-    .result.error { color: #ffbfbf; }
-
-    .back {
-      display: inline-block;
-      margin-top: 15px;
-      text-decoration: none;
-      color: var(--accent);
-    }
+    .back { display: inline-block; margin-top: 15px; text-decoration: none; color: var(--accent); }
   </style>
 </head>
 <body>
@@ -131,9 +101,8 @@
       </div>
       <div style="flex:1">
         <label for="peso">Peso (opcional):</label>
-        <input type="text" id="peso" placeholder="exemplo: 12,5">
+        <input type="text" id="peso" placeholder="ex.: 12,5">
       </div>
-      <!-- NOVO -->
       <div style="flex:1">
         <label for="n">№ Etiquetas:</label>
         <input type="number" id="n" min="1" value="1" placeholder="">
@@ -177,12 +146,18 @@
     const tabela = document.getElementById('tabelaItens');
     const tbody = tabela.querySelector('tbody');
     const resultBox = document.getElementById('resultBox');
-    let linhaSelecionada = null;
+
+    let linhaSelecionada = null; // mantém a linha clicada + referência do select
 
     function showMessage(text, type = 'success') {
       resultBox.textContent = text;
       resultBox.className = 'result ' + type;
       resultBox.style.display = 'block';
+      resultBox.style.opacity = '1';
+      setTimeout(() => {
+        resultBox.style.opacity = '0';
+        setTimeout(() => (resultBox.style.display = 'none'), 500);
+      }, 3000);
     }
 
     btnBuscar.addEventListener('click', async () => {
@@ -192,6 +167,7 @@
       btnBuscar.disabled = true;
       btnBuscar.textContent = "Buscando...";
       btnImprimir.disabled = true;
+      linhaSelecionada = null;
       resultBox.style.display = "none";
 
       try {
@@ -209,44 +185,57 @@
         }
 
         tbody.innerHTML = "";
-        data.forEach(row => {
+        data.forEach((row) => {
           const tr = document.createElement("tr");
-          const lotes = row.lotes_disponiveis ? row.lotes_disponiveis.split(",") : [];
+
+          // cria o select de lotes
           const select = document.createElement("select");
+          const lotes = (row.lotes_disponiveis || "")
+            .split(",")
+            .map(s => s.trim())
+            .filter(Boolean);
+
+          // fallback: se não houver listagem, usa o próprio lote do row (se existir)
+          if (lotes.length === 0 && row.lote) {
+            lotes.push(String(row.lote));
+          }
+
           lotes.forEach(lote => {
             const option = document.createElement("option");
-            option.value = lote.trim();
-            option.textContent = lote.trim();
+            option.value = lote;
+            option.textContent = lote;
+            if (row.lote && String(row.lote) === lote) option.selected = true;
             select.appendChild(option);
           });
 
           tr.innerHTML = `
-            <td>${row.item_code}</td>
-            <td>${row.descricao || "(sem descrição)"}</td>
+            <td>${row.item_code || ''}</td>
+            <td>${row.descricao || '(sem descrição)'}</td>
           `;
           const tdLote = document.createElement("td");
           tdLote.appendChild(select);
           tr.appendChild(tdLote);
           tbody.appendChild(tr);
 
-          tr.addEventListener("click", () => {
+          // clique na linha => seleciona corretamente
+          tr.addEventListener("click", (e) => {
+            if (e.target.tagName === 'SELECT') return; // não re-selecionar ao abrir o select
+
             [...tbody.querySelectorAll("tr")].forEach(l => l.classList.remove("selected"));
             tr.classList.add("selected");
 
-            // Captura segura do item_code (independente do casing)
-            const codigo = row.item_code || row.ItemCode || row.ITEMCODE || "";
-
-            linhaSelecionada = { 
-              ...row, 
-              itemCode: row.item_code,  // cria o campo no formato esperado pelo backend
-              lote: select.value 
+            linhaSelecionada = {
+              ...row,
+              itemCode: row.item_code || row.ItemCode || row.ITEMCODE || "",
+              lote: select.value,
+              selectElement: select
             };
-
             btnImprimir.disabled = false;
           });
 
+          // alterar lote no select atualiza o objeto se a linha estiver selecionada
           select.addEventListener("change", () => {
-            if (tr.classList.contains("selected")) {
+            if (tr.classList.contains("selected") && linhaSelecionada) {
               linhaSelecionada.lote = select.value;
             }
           });
@@ -264,22 +253,30 @@
 
     btnImprimir.addEventListener('click', async () => {
       if (!linhaSelecionada) return alert("Selecione um item primeiro.");
+
       const qtd = document.getElementById('qtd').value.trim();
       const peso = document.getElementById('peso').value.trim();
-      const n = document.getElementById('n').value.trim();        /* NOVO */
+      const n = Number(document.getElementById('n').value.trim() || 1);
       const printer = document.getElementById('printer').value;
 
       if (!qtd) return alert("Informe a quantidade.");
-      if (!n || Number(n) < 1) return alert("Informe o número de etiquetas (n) ≥ 1."); /* NOVO */
+      if (n < 1) return alert("Informe o número de etiquetas (n) ≥ 1.");
+
+      // garante que usamos o valor atual do select de lote
+      const loteAtual = linhaSelecionada.selectElement
+        ? linhaSelecionada.selectElement.value
+        : linhaSelecionada.lote;
 
       const payload = {
-        itemCode: linhaSelecionada.item_code,
-        lote: linhaSelecionada.lote,
+        itemCode: linhaSelecionada.itemCode,
+        lote: loteAtual,
         qtd,
         peso,
-        n: Number(n),            /* NOVO */
+        n,
         printer
       };
+
+      console.log("Payload estoque =>", payload);
 
       try {
         btnImprimir.disabled = true;
@@ -292,8 +289,11 @@
         });
 
         const out = await resp.json();
-        if (resp.ok) showMessage(`Etiqueta inserida na fila de impressão ✅ (${n}x)`);
-        else showMessage(out.error || "Erro ao imprimir etiqueta.", "error");
+        if (resp.ok) {
+          showMessage(`Etiqueta inserida na fila de impressão ✅ (${n}x)`);
+        } else {
+          showMessage(out.error || "Erro ao imprimir etiqueta.", "error");
+        }
       } catch (err) {
         showMessage("Erro: " + err.message, "error");
       } finally {
