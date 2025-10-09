@@ -1,9 +1,9 @@
 from db import _getConnection
 import pandas as pd
 
-def run_query_tra(nf):
+def run_query_flex(nf, query_path):
     try:
-        with open("queries/transito.sql", "r", encoding="utf-8") as f:
+        with open(query_path, "r", encoding="utf-8") as f:
             query = f.read()
         if nf:
             with _getConnection() as conn:
@@ -35,4 +35,7 @@ def run_query_exp(pv):
     except Exception as e:
         print("Erro na consulta")
         raise e 
+
+
+
        

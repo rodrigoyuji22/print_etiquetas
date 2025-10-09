@@ -1,20 +1,21 @@
 from flask import Flask, request, jsonify, render_template
+from flask_cors import CORS
 from dotenv import load_dotenv
 from pathlib import Path
 import os
 
-from services.query_service import *
+from services.query_service import run_query_est, run_query_exp, run_query_flex
 from services.print_service import print_
-from services.label_service import *
+from services.label_service import render_transport_label, render_labels
+
 
 load_dotenv()
 app = Flask(__name__)
+CORS(app)
 
 printerTransporte, printerExpedicao, printerGalpao = os.getenv("PRINTER_TRA"), os.getenv("PRINTER_EXPEDICAO"), os.getenv("PRINTER_GALPAO2")
 template_transporte, template_expedicao, template_estoque = Path("zpl/transito.zpl"), Path("zpl/expedicao.zpl"), Path("zpl/estoque.zpl")
 host, port = os.getenv("HOST_API"), int(os.getenv("PORT_API", 1234))
-
-
 
 
 @app.route('/')
@@ -33,6 +34,10 @@ def expedica_page():
 def transporte_page():
     return render_template("transporte.html")
 
+@app.route('/dexco')
+def dexco_page():
+    return render_template("dexco.html")
+
 @app.route('/print/transporte', methods=['POST'])
 def print_transporte():
     try:
@@ -48,7 +53,7 @@ def print_transporte():
                 else:
                     nf = f"NF {nf}"
 
-        df = run_query_tra(nf)
+        df = run_query_flex(nf, "/queries/transito.sql")
         if df.empty: # type: ignore
             return jsonify({'error': 'NF não encontrada'}), 404
     
@@ -169,7 +174,6 @@ def consulta_estoque():
 
         if not itemCode:
             return jsonify({'error': 'Digite parte do código ou nome do item'}), 400
-
         df = run_query_est(itemCode)
         if df.empty: # type: ignore
             return jsonify({'error': 'Nenhum item encontrado'}), 404
@@ -178,7 +182,20 @@ def consulta_estoque():
 
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
+    
+@app.route('/consulta/dexco', methods=['POST'])
+def consulta_dexco():
+    try:
+        data = request.get_json()
+        nf = data.get('nf', '').strip()
+
+        if not nf:
+            return jsonify({'error': 'Digite uma NF valida'}), 400
+        df = run_query_flex(nf, "/queries/dexco.sql")
+        return df.to_dict(orient='records')
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
         
 if __name__ == '__main__':
-    app.run(host=host, port=port, debug=False, threaded=True)
+    app.run(host=host, port=port, debug=True, threaded=True)
