@@ -52,6 +52,23 @@ div.stButton > button:hover {
   background-color: #4c8bf5;
   transform: scale(1.02);
 }
+.st-key-key1 .stButton button{
+    background-color: none !important;
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  width: 6em;
+}
+.st-key-key1 .stButton button p{
+  font-size: 22px !important;
+}
+
+.st-key-key1 .stButton button p:hover{
+  color: #4c8bf5 !important;
+  transition: ease-in !important;
+}
 
 
 /* ======== FORMS ======== */

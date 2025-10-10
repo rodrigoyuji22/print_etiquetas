@@ -9,12 +9,12 @@ load_css()
 with st.form("forms_transporte"):
     st.title("Etiqueta de Transporte")
     nf = st.text_input("Número da NF:")
-    vol = st.text_input("Volume:")
+    vol = st.text_input("Quantidade de Volumes:")
+    
     submitted = st.form_submit_button("Imprimir Etiqueta")
-
     if submitted:
         if not nf:
-            st.warning("Insira NF válida")
+            st.warning("Insira uma NF")
         else:
             data = {'nf': nf, 'vol': vol}
             try:
@@ -23,6 +23,10 @@ with st.form("forms_transporte"):
                     st.success("✅ Etiquetas inseridas na fila!")
             except Exception as e:
                 st.error("NF inválida")
+
+if st.button("Voltar", key="key1", use_container_width=False):
+    st.switch_page("interface.py")
+
 
 
 
