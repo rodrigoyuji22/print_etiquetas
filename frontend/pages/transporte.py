@@ -16,6 +16,8 @@ with st.form("forms_transporte"):
         if not nf:
             st.warning("Insira uma NF")
         else:
+            if not vol:
+                vol = 1
             data = {'nf': nf, 'vol': vol}
             try:
                 response = requests.post(f"{api_url}/print/transporte", json=data)

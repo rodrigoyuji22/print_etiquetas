@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
 from pathlib import Path
@@ -18,25 +18,6 @@ template_transporte, template_expedicao, template_estoque = Path("zpl/transito.z
 host, port = os.getenv("HOST_API"), int(os.getenv("PORT_API", 1234))
 
 
-@app.route('/')
-def home():
-    return render_template("index.html")
-
-@app.route('/estoque')
-def estoque_page():
-    return render_template("estoque.html")
-
-@app.route('/expedicao')
-def expedica_page():
-    return render_template("expedicao.html")
-
-@app.route('/transporte')
-def transporte_page():
-    return render_template("transporte.html")
-
-@app.route('/dexco')
-def dexco_page():
-    return render_template("dexco.html")
 
 @app.route('/print/transporte', methods=['POST'])
 def print_transporte():
@@ -155,10 +136,11 @@ def consulta_expedicao():
 
         if not pv:
             return jsonify({'error': 'Pedido de venda invalido'})
+        
         df = run_query_exp(pv)
         if df.empty: # type: ignore
             return jsonify({'error': 'Pedido de venda vazio'})
-        return df.to_dict(orient = 'records') # type: ignore
+        return jsonify(df.to_dict(orient = 'records')), 200 # type: ignore
         
     except Exception as e:
         return jsonify({
